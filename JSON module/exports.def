@@ -1,0 +1,9 @@
+LIBRARY JSON
+
+EXPORTS
+	Create				@1
+	AddObjact			@2
+	AddToObjact			@3
+
+	GetValue			@4	
+	GetValueFromData	@5

@@ -1,0 +1,11 @@
+LIBRARY lsLib
+
+EXPORTS
+	set @1
+	printInt @2
+	printString @3
+	printFloat @4
+	printDouble @5
+	printBool @6
+	EndLine @7
+	SetStringSymbol @8

@@ -1,0 +1,4 @@
+LIBRARY LOGICS_EDITOR
+
+EXPORTS
+	InitEditor			@1
