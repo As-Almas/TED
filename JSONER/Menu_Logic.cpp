@@ -5,7 +5,6 @@
 #include "Dialog_Creator.h"
 #include "framework.h"
 #include "Preview.h"
-#include "ProjectLogic.h"
 
 
 #include <string>
@@ -14,7 +13,6 @@ std::wstring UsersProjectsFilePath;
 typedef bool(*Filer)(HWND), (*FILEADDFUNC)(LPCWSTR filePath, LPCSTR line);
 typedef void(*GETFOLDER)(char*arr);
 static Window MainWindow = NULL;
-Project_Logic* prWindow = NULL;
 char* folderPath = new char[MAX_PATH + 1];
 char* lastFilePath = new char[MAX_PATH + 1];
 
@@ -22,9 +20,6 @@ char* lastFilePath = new char[MAX_PATH + 1];
 void GoToMainMenu() {
     if (!MainWindow.Destroy()) 
         return;
-    SaveData(L"LOGICS_As_Almas");
-    delete prWindow;
-    prWindow = NULL;
     wchar_t szFileName[MAX_PATH] = L"";
     GetModuleFileName(NULL, szFileName, MAX_PATH);
 
@@ -53,38 +48,6 @@ void GoToMainMenu() {
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     exit(1);
-}
-DWORD WINAPI ShowProjectWindow() {
-    MainWindow.Hide();
-    prWindow = new Project_Logic(MainWindow, folderPath);
-    if (!prWindow->Init()) {
-        MainWindow.DestroyAllItems();
-        MainWindow.Show();
-        MessageBox(MainWindow.GetWindow(), L"ERROR cannot init project window!", L"ERROR #8", MB_ICONERROR);
-        GoToMainMenu();
-        return FALSE;
-    }
-    MainWindow.Show();
-
-    return TRUE;
-}
-DWORD WINAPI ShowProjectWindow(const char*path) {
-    MainWindow.Hide();
-    prWindow = new Project_Logic(MainWindow, path);
-    if (!prWindow->Init()) {
-        MainWindow.DestroyAllItems();
-        MainWindow.Show();
-        MessageBox(MainWindow.GetWindow(), L"ERROR cannot init project window!", L"ERROR #8", MB_ICONERROR);
-        GoToMainMenu();
-        return FALSE;
-    }
-    MainWindow.Show();
-
-    return TRUE;
-}
-void Start() {
-    if(prWindow)
-        prWindow->Start();
 }
 
 void Logic::Init(Window window)
@@ -158,58 +121,7 @@ void Logic::Menu(int id, int action)
                 getPath(lastFilePath);
                 FreeLibrary(lib);
             }break;
-            case IDM_CREATE_PROJACT: {
-                HMODULE lib = LoadLibrary(L"Filer.dll");
-                if (!lib) {
-                    if (MessageOfError(L"Error: cannot init projact creator!"))
-                        Logic::Menu(id, action);
-                    return;
-                }
-                Filer OpenDialog = (Filer)GetProcAddress(lib, "CreateProjact");
-                GETFOLDER GetProjFolder = (GETFOLDER)GetProcAddress(lib, "GetFolderPath");
-                if (!*OpenDialog) {
-                    if (MessageOfError(L"Error: file creator was corupted!"))
-                        Logic::Menu(id, action);
-                    FreeLibrary(lib);
-                    return;
-                }
-                if (OpenDialog(MainWindow.GetWindow())) {
-                    MainWindow.DestroyAllItems();
-                    GetProjFolder(folderPath);
-                    AddProjectPath(folderPath);
-                    ShowProjectWindow();
-                }
-                FreeLibrary(lib);
-            }break;
-            case IDM_OPEN_PROJACT: {
-                HMODULE lib = LoadLibrary(L"Filer.dll");
-                if (!lib) {
-                    if (MessageOfError(L"Error: cannot init projact opener!"))
-                        Logic::Menu(id, action);
-                    return;
-                }
-                Filer OpenDialog = (Filer)GetProcAddress(lib, "OpenProjact");
-                GETFOLDER GetProjFolder = (GETFOLDER)GetProcAddress(lib, "GetFolderPath");
-                if (!*OpenDialog || !*GetProjFolder) {
-                    if (MessageOfError(L"Error: projact module was corupted!"))
-                        Logic::Menu(id, action);
-                    FreeLibrary(lib);
-                    AddProjectPath(folderPath);
-                    return;
-                }
-                if (!OpenDialog(MainWindow.GetWindow())) {
-                    FreeLibrary(lib);
-                    return;
-                }
-                GetProjFolder(folderPath);
-
-                FreeLibrary(lib);
-
-                ShowProjectWindow();
-            }break;
-            case ID_RUN_COMPILE: {
-                Start();
-            }break;
+            
             case ID_OPENHOMEWINDOW: {
                 GoToMainMenu();
             }break;

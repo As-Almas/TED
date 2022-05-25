@@ -14,13 +14,8 @@
 #define IDD_LOADBAR                     133
 #define IDB_BITMAP1                     135
 #define IDM_ABOUT                       200
-#define IDM_CREATE_PROJACT              201
 #define IDM_CREATE_FILE                 202
 #define IDM_EXIT                        203
-#define IDM_OPEN_PROJACT                204
-#define ID_RUN_RUN                      205
-#define ID_RUN_COMPILE                  206
-#define ID_RUN_PARAMETRS                207
 #define ID_HELP                         208
 #define IDM_OPFLIST                     209
 #define ID_OPENHOMEWINDOW               210

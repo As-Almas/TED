@@ -169,7 +169,6 @@
     <ClInclude Include="JSONER.h" />
     <ClInclude Include="Menu_Logic.h" />
     <ClInclude Include="Preview.h" />
-    <ClInclude Include="ProjectLogic.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Window.h" />
@@ -179,7 +178,6 @@
     <ClCompile Include="JSONER.cpp" />
     <ClCompile Include="Menu_Logic.cpp" />
     <ClCompile Include="Preview.cpp" />
-    <ClCompile Include="ProjectLogic.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

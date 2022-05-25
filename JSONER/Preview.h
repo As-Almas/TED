@@ -13,7 +13,6 @@
 #include <exception>
 
 
-std::vector<UI*> LoadData(LPCWSTR folderName, Window MainWindow);
+void LoadData(LPCWSTR folderName, Window MainWindow);
 void AddProjectPath(LPCSTR path);
-void SaveData(LPCWSTR folderName);
 
