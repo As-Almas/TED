@@ -9,7 +9,7 @@ HWND Window::window;
 MSG Window::msg;
 std::vector<UI*> Window::WindowUI;
 WNDCLASSEXW Window::wcex;
-int Window::minW, Window::minH;
+int Window::minW, Window::minH, Window::maxW = 0, Window::maxH = 0;
 HINSTANCE Window::hInst;
 void(*Window::InterfaceCAllBack)(int id, int action);
 WCHAR Window::szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
@@ -23,17 +23,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
     {
            int wmId = LOWORD(wParam);
+           int act = HIWORD(wParam);
             // Разобрать выбор в меню:
             if (*Window::InterfaceCAllBack)
                 Window::InterfaceCAllBack(wmId, EL_CLICK);
         for (UI* x : Window::WindowUI)
         {
             if (x->operator==(wmId)) {
-                x->Click();
+                x->Click(act);
                 break;
             }
         }
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return 0;
         
     }
     break;
@@ -50,7 +51,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_GETMINMAXINFO: {
         MINMAXINFO* pInfo = (MINMAXINFO*)lParam;
         POINT min = { Window::minW, Window::minH };
+        POINT max = pInfo->ptMaxTrackSize;
         pInfo->ptMinTrackSize = min;
+        if (Window::maxH != 0)
+            pInfo->ptMaxTrackSize.y = Window::maxH;
+        if (Window::maxW != 0)
+            pInfo->ptMaxTrackSize.x = Window::maxW;
         return 0;
     }break;
     case WM_SIZE: {
@@ -280,6 +286,18 @@ void Window::SetMenuIcon(UINT menuID, UINT imageID)
     ::SetMenuItemBitmaps(menu, menuID, MF_BYCOMMAND, bitMap, bitMap);
 
     DeleteObject(bitMap);
+}
+
+void Window::SetMaxSize(INT width, INT height)
+{
+    Window::maxH = height;
+    Window::maxW = width;
+}
+
+void Window::SetMinSize(INT width, INT heigth)
+{
+    Window::minW = width;
+    Window::minH = heigth;
 }
 
 void Window::Show()

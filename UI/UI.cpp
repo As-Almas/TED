@@ -194,6 +194,11 @@ void UI::UnLoadFont()
 	font = NULL;
 }
 
+void UI::EnableUpdateText(bool flag)
+{
+	isEnableUpdateText = flag;
+}
+
 
 void UI::Resize()
 {
@@ -237,10 +242,10 @@ void UI::Resize(UI_PARAMS params)
 	UpdateWindow(this->parentWnd);
 }
 
-void UI::Click()
+void UI::Click(int ActId)
 {
 	if (*this->onClick)
-		onClick(this);
+		onClick(this, ActId);
 }
 
 void UI::SetText(LPCWSTR text)
@@ -275,7 +280,14 @@ void UI::AddTextStyle(DWORD userStyle)
 
 void UI::AddStyle(DWORD userStyle)
 {
-	this->anyStyles |= userStyle;
+	if(!this->wnd)
+		this->anyStyles |= userStyle;
+	else
+	{
+		LONG style = GetWindowLongPtrW(this->wnd, GWL_STYLE);
+		style |= userStyle;
+		SetWindowLongPtrW(this->wnd, GWL_STYLE, style);
+	}
 }
 
 void UI::SetUserCursor(LPWSTR id)
@@ -323,7 +335,7 @@ void UI::SetFocusTextColor(int r, int g, int b)
 	this->FocusText = RGB(r, g, b);
 }
 
-void UI::SetOnClick(void(*func)(UI*))
+void UI::SetOnClick(void(*func)(UI*, int))
 {
 	this->onClick = func;
 }
@@ -346,7 +358,12 @@ bool UI::isFocus()
 void UI::Focus()
 {
 	this->isFocused = true;
-	SetWindowText(this->wnd, this->parametrs.text.c_str());
+	if(isEnableUpdateText)
+		SetWindowText(this->wnd, this->parametrs.text.c_str());
+	else {
+		InvalidateRect(this->wnd, NULL, TRUE);
+		UpdateWindow(this->wnd);
+	}
 	if (*this->onFocus)
 		this->onFocus(this);
 }
@@ -354,7 +371,12 @@ void UI::Focus()
 void UI::UnFocus()
 {
 	this->isFocused = false;
-	SetWindowText(this->wnd, this->parametrs.text.c_str());
+	if (isEnableUpdateText)
+		SetWindowText(this->wnd, this->parametrs.text.c_str());
+	else {
+		InvalidateRect(this->wnd, NULL, TRUE);
+		UpdateWindow(this->wnd);
+	}
 	if (*this->onFocusOut)
 		this->onFocusOut(this);
 }
@@ -387,6 +409,10 @@ void UI::Destroy()
 HWND UI::GetUIWindow()
 {
 	return this->wnd;
+}
+
+HFONT UI::GetUIFont() {
+	return this->font;
 }
 
 UI::~UI()

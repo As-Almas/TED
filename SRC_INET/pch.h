@@ -7,7 +7,9 @@
 #ifndef PCH_H
 #define PCH_H
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 // Добавьте сюда заголовочные файлы для предварительной компиляции
 #include "framework.h"
-
+#include <WinSock2.h>
+#include <WS2tcpip.h>
 #endif //PCH_H

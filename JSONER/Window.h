@@ -14,7 +14,7 @@ private:
 	static HWND window;
 	static WNDCLASSEXW wcex;
 	static HINSTANCE hInst;
-	static int minW, minH;
+	static int minW, minH, maxW, maxH;
 	static void(*InterfaceCAllBack)(int id, int action);
 	static std::vector<UI*> WindowUI;
 	static WCHAR szTitle[MAX_LOADSTRING];                  
@@ -38,6 +38,8 @@ public:
 
 	static void SetMenuIcon(UINT menuID, LPCWSTR path);
 	static void SetMenuIcon(UINT menuID, UINT imageID);
+	static void SetMaxSize(INT width, INT height);
+	static void SetMinSize(INT width, INT heigth);
 
 	static void Hide();
 	static void Show();

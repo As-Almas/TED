@@ -1,6 +1,8 @@
 #pragma once
 
-#pragma once
+#ifndef UI_LOGICS
+#define UI_LOGICS
+
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <string>
@@ -43,12 +45,12 @@ private:
 	// end of font territory
 	LPCWSTR type;
 	HWND wnd;
-	void(*onClick)(UI* element);
+	void(*onClick)(UI* element, int actID);
 	void(*onFocus)(UI* element);
 	void(*onFocusOut)(UI* element);
 
 	bool isFocused = false;
-
+	bool isEnableUpdateText = true;
 
 	void DrawUIText(DRAWITEMSTRUCT* dc, COLORREF color, int fSize);
 	void DrawDef(DRAWITEMSTRUCT* dc);
@@ -68,10 +70,11 @@ public:
 
 	void Resize();
 	void Resize(UI_PARAMS params);
-	void Click();
+	void Click(int ActId);
 	void Focus();
 	void UnFocus();
 	void Draw(DRAWITEMSTRUCT* dc);
+	
 
 	void SetText(LPCWSTR text);
 	void SetParams(LPCWSTR elType, UI_PARAMS params);
@@ -81,6 +84,7 @@ public:
 	void AddTextStyle(DWORD userStyle);
 	bool LoadFont();
 	void UnLoadFont();
+	void EnableUpdateText(bool flag);
 
 	void AddStyle(DWORD userStyle);
 	void SetUserCursor(LPWSTR id);
@@ -97,7 +101,7 @@ public:
 	void SetDefTextColor(int r, int g, int b);
 	void SetFocusTextColor(int r, int g, int b);
 
-	void SetOnClick(void(*func)(UI*));
+	void SetOnClick(void(*func)(UI*,int));
 	void SetOnFocus(void(*func)(UI*));
 	void SetOnFocusOut(void(*func)(UI*));
 
@@ -106,6 +110,7 @@ public:
 	void Destroy();
 
 	HWND GetUIWindow();
+	HFONT GetUIFont();
 
 	~UI();
 
@@ -122,3 +127,4 @@ public:
 	void operator =(const UI otherUI);
 };
 
+#endif
