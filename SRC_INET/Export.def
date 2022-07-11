@@ -5,7 +5,8 @@ EXPORTS
 		InitHttpSocket			@2
 		ConnectToHttpServer		@3
 		SendHttpGETRequest		@4
-		GetHttpRequestResult	@5
-		CloseHttpSock			@6
-		FreeSysDll				@7
+		SendHttpPOSTRequest		@5
+		GetHttpRequestResult	@6
+		CloseHttpSock			@7
+		FreeSysDll				@8
 	
